@@ -1,12 +1,11 @@
 let
     Source = 
-
     Table.TransformColumnTypes(
     Table.ReplaceValue(
     Table.TransformColumnTypes(
     Table.SelectColumns(
     Table.PromoteHeaders(
-        Csv.Document((AzureStorage.Blobs("https://STORAGEACCOUNTNAME.blob.core.windows.net/disp-diaria"){[Name = "Cards.csv"]}[Content]),
+        Csv.Document((AzureStorage.Blobs(Text.Combine({URL, CONTAINER})){[Name = Text.Combine({"Cards", ".csv"})]}[Content]),
         [Delimiter=";",
         Columns=5,
         Encoding=65001,
