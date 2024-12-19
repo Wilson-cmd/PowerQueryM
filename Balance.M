@@ -1,11 +1,13 @@
 let 
-    Source = Table.TransformColumnTypes(
+    Source = 
+    Table.ReplaceErrorValues(
+    Table.TransformColumnTypes(
     
     Table.ReplaceValue(    
     
     Table.TransformColumnTypes(
     Table.PromoteHeaders(
-        Csv.Document((AzureStorage.Blobs("STORAGEACCOUNTNAME/disp-diaria"){[Name = "Simulation.csv"]}[Content]),
+        Csv.Document((AzureStorage.Blobs(Text.Combine({URL, CONTAINER})){[Name = Text.Combine({WORKSHEETS, ".csv"})]}[Content]),
         
         [Delimiter=",",
         Columns=4,
@@ -23,6 +25,6 @@ let
 
     ),".",",", Replacer.ReplaceText, {"Value"}),
     {{"Value", type number}}),
-    #"Erros Substituídos" = Table.ReplaceErrorValues(Source, {{"Date", null}})
+    {{"Date", null}})
 in
-    #"Erros Substituídos"
+    Source
