@@ -1,10 +1,9 @@
-//Connection with blob storage
 let
     // Column's list
     ARRAYCOLUMNNAME = {"Bridges", "Date", "Value"},
 
 
-    source = 
+    Source = 
     Table.TransformColumnTypes(
     Table.UnpivotOtherColumns(
     Table.PromoteHeaders(
@@ -13,7 +12,7 @@ let
     Table.FillDown(
     Table.Transpose(
     Table.RemoveRows(
-    Excel.Workbook(AzureStorage.Blobs(Text.Combine({URL, CONTAINER})){[Name = WORKSHEET]}[Content]){[Item = SHEET, Kind = "Sheet"]}[Data]
+    Excel.Workbook(AzureStorage.Blobs(Text.Combine({URL, CONTAINER})){[Name = Text.Combine({WORKSHEETS, ".xlsm"})]}[Content]){[Item = SHEET, Kind = "Sheet"]}[Data]
     , 2, 2))
     ,{"Column1"})
     ,{"Column1", "Column2"}, Combiner.CombineTextByDelimiter(" : ", QuoteStyle.None), ARRAYCOLUMNNAME{0})
@@ -26,4 +25,4 @@ let
         ,{ARRAYCOLUMNNAME{2}, Number.Type}
     })
 in
-    source
+    Source
