@@ -1,0 +1,50 @@
+/*
+########-MELHORIA-############
+A/C PGL e SPL - 3 casas decimais
+MS final e SPL - 1 casa decimal
+Produção e Volume - 0 casas decimais
+Yield - 1 casa decimal
+
+*/
+
+let
+    Source = 
+    Table.RenameColumns(
+    Table.TransformColumnTypes(
+    Table.PromoteHeaders(Table.Transpose(Table.DemoteHeaders(
+    Table.SelectRows(
+    Table.SelectRows(
+    Table.RenameColumns(
+    Table.SelectColumns(
+ 
+    Excel.Workbook(AzureStorage.BlobContents(URL&".xlsm"), null, true){[Item="KPIs",Kind="Sheet"]}[Data]
+
+    ,GenerateListByRange(1,10), MissingField.UseNull)
+    ,{
+        {"Column1","Processos"}
+        ,{"Column2","TCPGL"}
+        ,{"Column3","A/CPGL"}
+        ,{"Column4","A/CSPL"}
+        ,{"Column5","Produção"}
+        ,{"Column6","Yield"}
+        ,{"Column7","Volume"}
+        ,{"Column8","MSaglom"}
+        ,{"Column9","MSfinal"}
+        ,{"Column10","MSspl"}
+    })
+
+    , each Value.Type([Processos]) = type text)
+    , each Text.Contains([Processos], "MÉDIA"))
+    
+    )),[PromoteAllScalars = true])
+
+    ,{{"Processos", type text}, {"MÉDIA DIÁRIA", type number}, {"MÉDIA MENSAL", type number}, {"MÉDIA ANO", type number}})
+
+    ,{
+        {"MÉDIA DIÁRIA", "Média Diária"}
+        ,{"MÉDIA MENSAL", "Média Mensal"}
+        ,{"MÉDIA ANO", "Média Anual"}
+    }
+    )
+in
+    Source
