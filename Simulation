@@ -1,0 +1,50 @@
+let
+    Source =
+    Table.TransformColumnTypes(
+    Table.RenameColumns(
+    Table.SelectRows(
+    Table.TransformColumnTypes(
+    Table.UnpivotOtherColumns(
+    Table.PromoteHeaders(  
+    Table.FillDown(
+    Table.Transpose(
+    Table.RemoveRows(
+    Table.SelectColumns(
+    Excel.Workbook(AzureStorage.BlobContents(URL&".xlsm"), null, true){[Item="KPIs",Kind="Sheet"]}[Data]
+    // Check this range if chance number of columns in excel 
+    ,GenerateListByRange(12,139), MissingField.UseNull)
+    ,0,1)
+    ),{"Column1"})
+    , [PromoteAllScalars=true])
+    , {"Column1", "Column2"}, "Date", "Value")
+   ,{
+       
+       {"Column1", type text}
+       ,{"Column2", type text}
+       ,{"Date", type date}
+       ,{"Value", type text}
+
+    })
+    
+    ,each ([Value] <> "") and List.Contains({"Balanço Populacional (#/h)", "Densidade de Partículas (#/kg)",	"K cres", "SPR", "SSA (m²/g)", "SST (β)", "Total SSA (m²)", "Vazão Sól (t/h)"}, [Column1] ) )
+
+    ,{
+       
+       {"Column1", "Process"}
+       ,{"Column2", "Variables"}
+
+       
+
+    })
+
+
+       ,{
+       
+       {"Process", type text}
+       ,{"Variables", type text}
+       ,{"Date", type date}
+       ,{"Value", type number}
+
+    })
+in
+    Source
