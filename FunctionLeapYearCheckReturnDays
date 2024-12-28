@@ -1,0 +1,40 @@
+/* 
+    (LEAP YEAR OR NOT)
+This function check if year have 365 or 366 days
+
+*/
+(n as number) =>
+
+let
+
+    ParseNumberToText = Number.ToText(n),
+
+    ConditionalToCheckParseNumber = if Text.EndsWith(ParseNumberToText, "00") then Text.Start(ParseNumberToText, 2) else Text.End(ParseNumberToText, 2),
+
+    ParseTextToNumber = Number.From(ConditionalToCheckParseNumber),
+
+    CheckModNumber = Number.Mod(ParseTextToNumber, 4),
+
+    Return = if CheckModNumber = 0 then 366 else 365
+
+in
+    Return
+
+/*
+
+  I used this code to generate an auto-calender table for a project:
+
+  the code:
+
+==========================================================================================================    
+let
+    // Returns current year
+    Year = Date.Year(DateTime.LocalNow()),
+
+    // Using minus one to return periods of the current year
+    Fonte = List.Dates(#date(Year, 12, 31), FunctionLeapYearCheckReturnDays(Year), #duration(-1, 0, 0, 0))
+in
+    Fonte
+==========================================================================================================
+
+*/
