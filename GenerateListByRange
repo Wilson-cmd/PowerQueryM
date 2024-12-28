@@ -1,0 +1,6 @@
+(min, max as number) =>
+
+let
+    Fonte = List.Transform({min..max}, each Text.Combine({"Column", Number.ToText(_)}))
+in
+    Fonte
