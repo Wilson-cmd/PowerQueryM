@@ -32,9 +32,26 @@ let
     Year = Date.Year(DateTime.LocalNow()),
 
     // Using minus one to return periods of the current year
-    Fonte = List.Dates(#date(Year, 12, 31), FunctionLeapYearCheckReturnDays(Year), #duration(-1, 0, 0, 0))
+    Source = 
+    Table.Sort(
+        Table.TransformColumnTypes(
+        Table.RenameColumns(
+        Table.FromList(   
+        List.Dates(#date(Year, 12, 31), FunctionLeapYearCheckReturnDays(Year), #duration(-1, 0, 0, 0))
+    , Splitter.SplitByNothing(), null, null, ExtraValues.Error)
+
+    , {
+        {"Column1", "Date"}
+    })
+
+
+    , {
+        {"Date", type date}
+    })
+
+    , {"Date", Order.Ascending})
 in
-    Fonte
+    Source
 ==========================================================================================================
 
 */
