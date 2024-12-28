@@ -28,6 +28,10 @@ in
 
 ==========================================================================================================    
 let
+    // Returns current day
+    Day = Date.Day(DateTime.LocalNow()),
+    // Returns current month
+    Month = Date.Month(DateTime.LocalNow()),
     // Returns current year
     Year = Date.Year(DateTime.LocalNow()),
 
@@ -37,7 +41,7 @@ let
         Table.TransformColumnTypes(
         Table.RenameColumns(
         Table.FromList(   
-        List.Dates(#date(Year, 12, 31), FunctionLeapYearCheckReturnDays(Year), #duration(-1, 0, 0, 0))
+        List.Dates(#date(Year, Month, Day), FunctionLeapYearCheckReturnDays(Year), #duration(-1, 0, 0, 0))
     , Splitter.SplitByNothing(), null, null, ExtraValues.Error)
 
     , {
