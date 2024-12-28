@@ -1,0 +1,52 @@
+/*
+    Created by: Wilson Nascimento Costa
+    Date: 19/12/2024
+    E-mail: wilson.costa@votorantim.com
+
+*/
+
+let
+    Source = 
+    Table.SelectRows(
+    Table.RemoveColumns(
+    Table.AddColumn(
+    Table.AddColumn(
+    Table.AddColumn(
+    Table.ReplaceValue(
+    Table.ReplaceValue(
+    Table.TransformColumnTypes( 
+    Table.UnpivotOtherColumns(
+    Table.PromoteHeaders(
+    Table.ReplaceErrorValues(
+    Table.CombineColumns(
+    Table.FillDown(
+    Table.Transpose(
+    Table.RemoveRows(
+
+    Excel.Workbook(AzureStorage.BlobContents(URL&".xlsm"), null, true){[Item="Dados_Bridge",Kind="Sheet"]}[Data]
+    , 2, 2))
+    ,{"Column1"})
+    ,{"Column1", "Column2"}, Combiner.CombineTextByDelimiter(" : ", QuoteStyle.None), "Bridges")
+    ,{{"Bridges", "Bridges"}})
+    ,[PromoteAllScalars = true])
+    ,{"Bridges"}, "Date", "Value")
+    ,{
+        {"Bridges", Text.Type}
+        ,{"Date", type date}
+        ,{"Value", Number.Type}
+    })
+    
+    ,"-",":",Replacer.ReplaceText,{"Bridges"})
+    ,"BRIDGE","",Replacer.ReplaceText,{"Bridges"})
+    
+    ,"Period", each Text.Trim(Text.BeforeDelimiter([Bridges], ":", 0)), type text)
+    ,"Status", each Text.Trim(Text.BetweenDelimiters([Bridges], ":", ":")), type text)
+    ,"Field", each Text.Trim(Text.AfterDelimiter([Bridges], ":", 1)), type text)
+
+
+    , "Bridges")
+    
+    , each
+        Text.Contains([Period], "DIÁRIA") and not Text.Contains([Status], "INVISÍVEL REALIZADO") and List.Contains({"YIELD", "SÓLIDOS SPL",	"ALVO SÓLIDOS SPL"}, [Field] ) )
+in
+    Source
