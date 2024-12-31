@@ -1,9 +1,12 @@
 let
-    Source =
+    
+    
+    
+    Source  = 
     Table.TransformColumnTypes(
     Table.RenameColumns(
     Table.SelectRows(
-    Table.TransformColumnTypes(
+    Table.ReplaceErrorValues(
     Table.UnpivotOtherColumns(
     Table.PromoteHeaders(  
     Table.FillDown(
@@ -17,15 +20,8 @@ let
     ),{"Column1"})
     , [PromoteAllScalars=true])
     , {"Column1", "Column2"}, "Date", "Value")
-   ,{
-       
-       {"Column1", type text}
-       ,{"Column2", type text}
-       ,{"Date", type date}
-       ,{"Value", type text}
 
-    })
-    
+    ,{{"Value", null}})
     ,each ([Value] <> "") and List.Contains({"Balanço Populacional (#/h)", "Densidade de Partículas (#/kg)",	"K cres", "SPR", "SSA (m²/g)", "SST (β)", "Total SSA (m²)", "Vazão Sól (t/h)"}, [Column1] ) )
 
     ,{
@@ -36,9 +32,8 @@ let
        
 
     })
-
-
-       ,{
+    
+    ,{
        
        {"Process", type text}
        ,{"Variables", type text}
@@ -46,5 +41,17 @@ let
        ,{"Value", type number}
 
     })
+
+
+  
 in
     Source
+
+
+
+// TO SIMULATION HEADERS
+
+// Source = Table.Pivot(StepSource, List.Distinct(StepSource[Variables]), "Variables", "Value", List.Sum)
+
+
+
